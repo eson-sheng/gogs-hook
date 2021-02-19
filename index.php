@@ -6,7 +6,9 @@
  * Time: 16:48
  */
 
-require_once __DIR__ . '/GogsHook.php';
+require_once __DIR__ . '/src/autoload.php';
 
-$obj = new GogsHook();
+use models\Index;
+
+$obj = new Index();
 $obj->index();
