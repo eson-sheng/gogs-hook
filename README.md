@@ -20,4 +20,16 @@ http://xxx:888/?r=/home/www/item/path&b=master
 
 - 配置文件去除前缀，命名为`.env`就可配置完毕。
 
+**温馨提示：**
+需要手动配置www用户权限
+```
+# su www
+error: This account is currently not available.
+# usermod -s /bin/bash www
+# su www
+$ ssh-keygen -t rsa -b 4096 -C "your_email@example.com" 
+$ less ~/.ssh/id_rsa.pub
+...
+```
+
 ## 感谢您的使用，祝您生活愉快！
