@@ -18,9 +18,18 @@ class Index
         $b = $this->params('b');
         $this->validate($r);
 
+        $ret = Hook::pull($r,$b);
+        if (empty($ret)) {
+            return $this->json(
+                ErrorCode::ERROR_SHELL_EXEC,
+                $ret,
+                500
+            );
+        }
+
         return $this->json(
             ErrorCode::SUCCESS,
-            Hook::pull($r, $b),
+            $ret,
             200
         );
     }

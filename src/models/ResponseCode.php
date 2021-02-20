@@ -31,11 +31,17 @@ class ResponseCode
     const ERROR_ROOT_NOT_EMPTY = 301; // 项目路径不能为空
     const ERROR_ROOT_NOT_SET = 302; // 项目路径不存在
 
+    /**
+     * 配置git运行错误类 500
+     */
+    const ERROR_SHELL_EXEC = 501; // 终端运行错误，可能当前运行程序用户无法操作git权限问题。
+
     const CODE_MAP = [
         self::SUCCESS => 'OKAY',
         self::TOKEN_ERROR => '签名错误！',
         self::ERROR_ROOT_NOT_EMPTY => '项目路径不能为空！',
         self::ERROR_ROOT_NOT_SET => '项目路径不存在！',
+        self::ERROR_SHELL_EXEC => '终端运行错误，可能当前运行程序用户无法操作git权限问题。',
     ];
 
 }
