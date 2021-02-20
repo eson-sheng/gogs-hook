@@ -81,12 +81,14 @@ class Index
         return TRUE;
     }
 
-    protected function params ($name, $default = '')
+    /**
+     * @desc 获取接口参数
+     * @param $name
+     * @param null $default
+     * @return null
+     */
+    protected function params ($name, $default = null)
     {
-        if ($default) {
-            return $default;
-        }
-
         if (!empty($_REQUEST[$name])) {
             return $_REQUEST[$name];
         }
