@@ -15,7 +15,7 @@ class Index
     public function index ()
     {
         $r = $this->params('r');
-        $b = $this->params('b');
+        $b = $this->params('b', 'master');
         $this->validate($r);
 
         $ret = Hook::pull($r,$b);

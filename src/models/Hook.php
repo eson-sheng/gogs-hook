@@ -15,7 +15,12 @@ namespace models;
  */
 class Hook
 {
-    static public function pull ($r, $b = 'master')
+    /**
+     * @param $r string 服务器中项目部署的路径
+     * @param $b string 分支名称
+     * @return mixed
+     */
+    static public function pull ($r, $b)
     {
         $cmd = "cd {$r} && git reset --hard origin/{$b} && git pull origin {$b} 2>&1";
         exec($cmd,$arr);
