@@ -22,7 +22,7 @@ class Hook
      */
     static public function pull ($r, $b)
     {
-        $cmd = "cd {$r} && git checkout {$b} git reset --hard origin/{$b} && git pull 2>&1";
+        $cmd = "cd {$r} && git checkout {$b} && git reset --hard origin && git pull 2>&1";
         exec($cmd,$arr);
         return $arr;
     }
