@@ -110,7 +110,7 @@ class Index
             'msg' => ErrorCode::CODE_MAP[$code],
             'code' => $code,
             'data' => $data,
-        ]);
+        ], JSON_UNESCAPED_UNICODE);
         exit();
     }
 
