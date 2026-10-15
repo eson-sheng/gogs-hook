@@ -13,12 +13,26 @@ use models\ResponseCode as ErrorCode;
 class Index
 {
     private $config;
+    private $rawBody;
 
     public function index ()
     {
         $this->checkoutToken();
         $r = $this->params('r');
-        $b = $this->params('b', 'master');
+        $b = $this->params('b');
+        if ($b === null) {
+            $payload = json_decode($this->rawBody, true);
+            $ref = is_array($payload) && isset($payload['ref']) ? $payload['ref'] : null;
+            if (!is_string($ref) || strpos($ref, 'refs/heads/') !== 0 ||
+                strlen($ref) <= strlen('refs/heads/')) {
+                return $this->json(ErrorCode::ERROR_PUSH_REF, [], 406);
+            }
+            // Branch deletion must never deploy another branch as a fallback.
+            if (isset($payload['after']) && $payload['after'] === str_repeat('0', 40)) {
+                return $this->json(ErrorCode::SUCCESS, ['分支已删除，跳过更新'], 200);
+            }
+            $b = substr($ref, strlen('refs/heads/'));
+        }
         $o = $this->params('o');
         $s = $this->params('s') === 'true';
         $this->validate($r, $o);
@@ -116,6 +130,7 @@ class Index
         if (!hash_equals($gogs_signature, strtolower($signature))) {
             return $this->json(ErrorCode::TOKEN_ERROR, [], 401);
         }
+        $this->rawBody = $raw_post_data;
         return TRUE;
     }
 
