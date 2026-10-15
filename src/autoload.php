@@ -8,5 +8,5 @@
 
 /*自动加载*/
 spl_autoload_register(function ($class) {
-    require str_replace('\\', DIRECTORY_SEPARATOR, ltrim($class, '\\')) . '.php';
+    require __DIR__ . '/' . str_replace('\\', DIRECTORY_SEPARATOR, ltrim($class, '\\')) . '.php';
 });

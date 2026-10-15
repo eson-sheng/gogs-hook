@@ -30,6 +30,9 @@ class ResponseCode
      */
     const ERROR_ROOT_NOT_EMPTY = 301; // 项目路径不能为空
     const ERROR_ROOT_NOT_SET = 302; // 项目路径不存在
+    const ERROR_HOST_INVALID = 303; // 服务器地址格式错误
+    const ERROR_TARGET_FORBIDDEN = 304;
+    const ERROR_PARAM_INVALID = 305;
 
     /**
      * 配置git运行错误类 500
@@ -41,6 +44,9 @@ class ResponseCode
         self::TOKEN_ERROR => '签名错误！',
         self::ERROR_ROOT_NOT_EMPTY => '项目路径不能为空！',
         self::ERROR_ROOT_NOT_SET => '项目路径不存在！',
+        self::ERROR_HOST_INVALID => '服务器地址格式错误！',
+        self::ERROR_TARGET_FORBIDDEN => '服务器或目录不在白名单中！',
+        self::ERROR_PARAM_INVALID => '参数必须是字符串！',
         self::ERROR_SHELL_EXEC => '终端运行错误，可能当前运行程序用户无法操作git权限问题。',
     ];
 
