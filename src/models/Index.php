@@ -23,7 +23,20 @@ class Index
         $s = $this->params('s') === 'true';
         $this->validate($r, $o);
 
-        $ret = Hook::pull($r, $b, $o, $exitCode, $s);
+        $nginxBin = $this->_env('NGINX_BIN', 'nginx');
+        if ($o !== null && $s) {
+            $nginxBins = json_decode($this->_env('NGINX_BINS', '{}'));
+            if (!is_object($nginxBins)) {
+                return $this->json(ErrorCode::ERROR_NGINX_CONFIG, [], 500);
+            }
+            if (property_exists($nginxBins, $o)) {
+                $nginxBin = $nginxBins->{$o};
+            }
+            if (!is_string($nginxBin) || $nginxBin === '' || strpos($nginxBin, "\0") !== false) {
+                return $this->json(ErrorCode::ERROR_NGINX_CONFIG, [], 500);
+            }
+        }
+        $ret = Hook::pull($r, $b, $o, $exitCode, $s, $nginxBin);
         if ($exitCode !== 0) {
             return $this->json(
                 ErrorCode::ERROR_SHELL_EXEC,

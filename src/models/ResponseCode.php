@@ -38,6 +38,7 @@ class ResponseCode
      * 配置git运行错误类 500
      */
     const ERROR_SHELL_EXEC = 501; // 终端运行错误，可能当前运行程序用户无法操作git权限问题。
+    const ERROR_NGINX_CONFIG = 502;
 
     const CODE_MAP = [
         self::SUCCESS => 'OKAY',
@@ -48,6 +49,7 @@ class ResponseCode
         self::ERROR_TARGET_FORBIDDEN => '服务器或目录不在白名单中！',
         self::ERROR_PARAM_INVALID => '参数必须是字符串！',
         self::ERROR_SHELL_EXEC => '终端运行错误，可能当前运行程序用户无法操作git权限问题。',
+        self::ERROR_NGINX_CONFIG => 'Nginx 路径配置错误！',
     ];
 
 }

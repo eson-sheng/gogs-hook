@@ -20,7 +20,7 @@ class Hook
      * @param $b string 分支名称
      * @return mixed
      */
-    static public function pull ($r, $b, $o = null, &$exitCode = null, $reload = false)
+    static public function pull ($r, $b, $o = null, &$exitCode = null, $reload = false, $nginxBin = 'nginx')
     {
         $path = escapeshellarg($r);
         $branch = escapeshellarg($b);
@@ -37,7 +37,8 @@ class Hook
                 return ['服务器地址格式错误'];
             }
             if ($reload === true) {
-                $cmd .= ' && nginx -t && nginx -s reload';
+                $nginx = escapeshellarg($nginxBin);
+                $cmd .= " && {$nginx} -t && {$nginx} -s reload";
             }
             $cmd = 'ssh -o BatchMode=yes -o ConnectTimeout=10 '
                 . escapeshellarg('root@' . $o) . ' ' . escapeshellarg($cmd);

@@ -21,7 +21,12 @@ http://xxx:888/?r=/home/www/item/path&b=master
 ```
 http://xxx:888/?r=/home/www/item/path&b=master&o=192.168.1.100
 ```
-需要更新后重载远程 Nginx 时，在地址后加 `&s=true`。远程 SSH 环境的 `PATH` 中需要有 `nginx`。配置检查或重载失败会返回错误，但已完成的 Git 更新不会回滚。
+需要更新后重载远程 Nginx 时，在地址后加 `&s=true`。可在钩子服务器的 `.env` 设置 `NGINX_BIN` 为远程 Nginx 的默认路径，并通过 `NGINX_BINS` 按 `o` 的精确值覆盖：
+```ini
+NGINX_BIN = '/usr/sbin/nginx'
+NGINX_BINS = '{"112.74.83.111":"/www/server/nginx/sbin/nginx","192.168.1.100":"/usr/local/nginx/sbin/nginx"}'
+```
+优先使用 `NGINX_BINS[o]`，未配置该服务器时使用 `NGINX_BIN`，两者都未配置时使用 `nginx`。路径以远程实际安装位置为准，只填写可执行文件路径／名称，不要附加参数或命令。映射不会授予服务器访问权限，仍需配置 `ALLOWED_TARGETS`。远程重载请求若映射格式或选中的路径无效，会在 Git 更新前拒绝执行；本地或不重载时忽略映射。Nginx 配置检查或重载失败会返回错误，但已完成的 Git 更新不会回滚。
 
 `s` 只控制固定命令，不接收自定义脚本。所有请求必须携带有效的 `X-Gogs-Signature`（原始请求体的 SHA256 HMAC）；缺失、错误签名或缺少密钥均返回 401。服务器和目录还必须匹配 `.env` 白名单，否则返回 403。
 
