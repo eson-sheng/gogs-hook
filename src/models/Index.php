@@ -20,19 +20,21 @@ class Index
         $this->checkoutToken();
         $r = $this->params('r');
         $b = $this->params('b');
-        if ($b === null) {
-            $payload = json_decode($this->rawBody, true);
-            $ref = is_array($payload) && isset($payload['ref']) ? $payload['ref'] : null;
-            if (!is_string($ref) || strpos($ref, 'refs/heads/') !== 0 ||
-                strlen($ref) <= strlen('refs/heads/')) {
-                return $this->json(ErrorCode::ERROR_PUSH_REF, [], 406);
-            }
-            // Branch deletion must never deploy another branch as a fallback.
-            if (isset($payload['after']) && $payload['after'] === str_repeat('0', 40)) {
-                return $this->json(ErrorCode::SUCCESS, ['分支已删除，跳过更新'], 200);
-            }
-            $b = substr($ref, strlen('refs/heads/'));
+        $payload = json_decode($this->rawBody, true);
+        $ref = is_array($payload) && isset($payload['ref']) ? $payload['ref'] : null;
+        if (!is_string($ref) || strpos($ref, 'refs/heads/') !== 0 ||
+            strlen($ref) <= strlen('refs/heads/')) {
+            return $this->json(ErrorCode::ERROR_PUSH_REF, [], 406);
         }
+        $pushBranch = substr($ref, strlen('refs/heads/'));
+        if ($b !== null && $b !== $pushBranch) {
+            return $this->json(ErrorCode::SUCCESS, ['推送分支与配置的 b 不一致，跳过更新'], 200);
+        }
+        // Branch deletion must never deploy or reload Nginx.
+        if (isset($payload['after']) && $payload['after'] === str_repeat('0', 40)) {
+            return $this->json(ErrorCode::SUCCESS, ['分支已删除，跳过更新'], 200);
+        }
+        $b = $pushBranch;
         $o = $this->params('o');
         $s = $this->params('s') === 'true';
         $this->validate($r, $o);
